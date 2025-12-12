@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as yaml from 'js-yaml';
+import * as mime from 'mime-types';
 
 interface Config {
   server: {
@@ -122,6 +123,108 @@ app.get('/main/content', verifyToken, (req, res) => {
     res.json(content);
   } catch (error) {
     res.status(500).json({ error: 'Failed to read directory' });
+  }
+});
+
+app.get('/main/file', verifyToken, (req, res) => {
+  const reqPath = req.query.path as string;
+
+  if (!reqPath) {
+    return res.status(400).json({ error: 'Path required' });
+  }
+
+  // Find the folder that matches the path
+  let baseFolder = '';
+  let relativePath = '';
+
+  for (const folder of config.folders) {
+    const folderName = path.basename(folder);
+    if (reqPath.startsWith(folderName)) {
+      baseFolder = folder;
+      relativePath = reqPath.substring(folderName.length).replace(/^\/+/, '');
+      break;
+    }
+  }
+
+  if (!baseFolder) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+
+  const fullPath = path.resolve(baseFolder, relativePath);
+
+  // Ensure the resolved path is within the base folder
+  if (!fullPath.startsWith(path.resolve(baseFolder))) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+
+  try {
+    const stats = fs.statSync(fullPath);
+    if (!stats.isFile()) {
+      return res.status(400).json({ error: 'Not a file' });
+    }
+
+    const mimeType = mime.lookup(fullPath) || 'application/octet-stream';
+    const isText = mimeType.startsWith('text/') || mimeType === 'application/json' || mimeType.includes('javascript') || mimeType.includes('xml');
+    const isImage = mimeType.startsWith('image/');
+    const isVideo = mimeType.startsWith('video/');
+
+    if (isText) {
+      const content = fs.readFileSync(fullPath, 'utf8');
+      res.json({ type: 'text', content });
+    } else if (isImage || isVideo) {
+      res.json({ type: isImage ? 'image' : 'video', url: `/main/file/download?path=${encodeURIComponent(reqPath)}` });
+    } else {
+      res.json({ type: 'unknown' });
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to read file' });
+  }
+});
+
+app.get('/main/file/download', verifyToken, (req, res) => {
+  const reqPath = req.query.path as string;
+
+  if (!reqPath) {
+    return res.status(400).json({ error: 'Path required' });
+  }
+
+  // Find the folder that matches the path
+  let baseFolder = '';
+  let relativePath = '';
+
+  for (const folder of config.folders) {
+    const folderName = path.basename(folder);
+    if (reqPath.startsWith(folderName)) {
+      baseFolder = folder;
+      relativePath = reqPath.substring(folderName.length).replace(/^\/+/, '');
+      break;
+    }
+  }
+
+  if (!baseFolder) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+
+  const fullPath = path.resolve(baseFolder, relativePath);
+
+  // Ensure the resolved path is within the base folder
+  if (!fullPath.startsWith(path.resolve(baseFolder))) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+
+  try {
+    const stats = fs.statSync(fullPath);
+    if (!stats.isFile()) {
+      return res.status(400).json({ error: 'Not a file' });
+    }
+
+    const mimeType = mime.lookup(fullPath) || 'application/octet-stream';
+    res.setHeader('Content-Type', mimeType);
+    res.setHeader('Content-Length', stats.size);
+    const stream = fs.createReadStream(fullPath);
+    stream.pipe(res);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to read file' });
   }
 });
 

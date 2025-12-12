@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'api_service.dart';
 import 'models.dart';
+import 'file_viewer_screen.dart';
 
 class FolderBrowserScreen extends StatefulWidget {
   final ApiService api;
@@ -48,6 +49,16 @@ class _FolderBrowserScreenState extends State<FolderBrowserScreen> {
     _loadContent();
   }
 
+  void _openFile(String fileName) {
+    final filePath = currentPath.isEmpty ? fileName : '$currentPath/$fileName';
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FileViewerScreen(api: widget.api, filePath: filePath),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,7 +81,7 @@ class _FolderBrowserScreenState extends State<FolderBrowserScreen> {
                   leading: Icon(item.isFolder ? Icons.folder : Icons.insert_drive_file),
                   title: Text(item.name),
                   subtitle: item.size != null ? Text('${item.size} bytes') : null,
-                  onTap: item.isFolder ? () => _navigateToFolder(item.name) : null,
+                  onTap: item.isFolder ? () => _navigateToFolder(item.name) : () => _openFile(item.name),
                 );
               },
             ),

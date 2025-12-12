@@ -53,4 +53,18 @@ class ApiService {
     }
     return [];
   }
+
+  Future<Map<String, dynamic>?> getFileContent(String path) async {
+    try {
+      final uri = Uri.parse('$baseUrl/main/file').replace(queryParameters: {'path': path});
+      final response = await http.get(uri, headers: {'Authorization': 'Bearer $token'});
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        return json;
+      }
+    } catch (e) {
+      print('Error getting file content: $e');
+    }
+    return null;
+  }
 }
