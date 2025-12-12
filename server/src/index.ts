@@ -1,0 +1,130 @@
+import express from 'express';
+import cors from 'cors';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as yaml from 'js-yaml';
+
+interface Config {
+  server: {
+    name: string;
+    version: string;
+    country: string;
+    port: number;
+  };
+  folders: string[];
+  auth: {
+    username: string;
+    password: string;
+    jwt_secret: string;
+  };
+}
+
+interface ContentItem {
+  name: string;
+  is_folder: boolean;
+  size?: number;
+}
+
+// Load config
+const config: Config = yaml.load(fs.readFileSync(path.join(__dirname, '../config.yml'), 'utf8')) as Config;
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// Middleware to verify JWT
+const verifyToken = (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  jwt.verify(token, config.auth.jwt_secret, (err) => {
+    if (err) {
+      return res.status(403).json({ error: 'Invalid token' });
+    }
+    next();
+  });
+};
+
+// Check server endpoint
+app.get('/init/check', (req, res) => {
+  res.json({
+    server_name: config.server.name,
+    version: config.server.version,
+    country: config.server.country,
+  });
+});
+
+// Authenticate endpoint
+app.post('/init/auth', async (req, res) => {
+  const { username, password } = req.body;
+
+  if (username !== config.auth.username || password !== config.auth.password) {
+    return res.status(401).json({ error: 'Invalid credentials' });
+  }
+
+  const token = jwt.sign({ username }, config.auth.jwt_secret, { expiresIn: '24h' });
+  res.json({ token });
+});
+
+// Get content endpoint
+app.get('/main/content', verifyToken, (req, res) => {
+  const reqPath = req.query.path as string || '';
+
+  if (reqPath === '') {
+    // List root folders
+    const content: ContentItem[] = config.folders.map(folder => ({
+      name: path.basename(folder),
+      is_folder: true,
+    }));
+    return res.json(content);
+  }
+
+  // Find the folder that matches the path
+  let baseFolder = '';
+  let relativePath = '';
+
+  for (const folder of config.folders) {
+    const folderName = path.basename(folder);
+    if (reqPath.startsWith(folderName)) {
+      baseFolder = folder;
+      relativePath = reqPath.substring(folderName.length).replace(/^\/+/, '');
+      break;
+    }
+  }
+
+  if (!baseFolder) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+
+  const fullPath = path.resolve(baseFolder, relativePath);
+
+  // Ensure the resolved path is within the base folder
+  if (!fullPath.startsWith(path.resolve(baseFolder))) {
+    return res.status(403).json({ error: 'Access denied' });
+  }
+
+  try {
+    const items = fs.readdirSync(fullPath);
+    const content: ContentItem[] = items.map(item => {
+      const itemPath = path.join(fullPath, item);
+      const stats = fs.statSync(itemPath);
+      return {
+        name: item,
+        is_folder: stats.isDirectory(),
+        size: stats.isFile() ? stats.size : undefined,
+      };
+    });
+    res.json(content);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to read directory' });
+  }
+});
+
+app.listen(config.server.port, () => {
+  console.log(`Server running on port ${config.server.port}`);
+});

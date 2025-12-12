@@ -1,0 +1,130 @@
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const fs = __importStar(require("fs"));
+const path = __importStar(require("path"));
+const yaml = __importStar(require("js-yaml"));
+// Load config
+const config = yaml.load(fs.readFileSync(path.join(__dirname, '../config.yml'), 'utf8'));
+const app = (0, express_1.default)();
+app.use((0, cors_1.default)());
+app.use(express_1.default.json());
+// Middleware to verify JWT
+const verifyToken = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).json({ error: 'No token provided' });
+    }
+    const token = authHeader.split(' ')[1];
+    jsonwebtoken_1.default.verify(token, config.auth.jwt_secret, (err) => {
+        if (err) {
+            return res.status(403).json({ error: 'Invalid token' });
+        }
+        next();
+    });
+};
+// Check server endpoint
+app.get('/init/check', (req, res) => {
+    res.json({
+        server_name: config.server.name,
+        version: config.server.version,
+        country: config.server.country,
+    });
+});
+// Authenticate endpoint
+app.post('/init/auth', async (req, res) => {
+    const { username, password } = req.body;
+    if (username !== config.auth.username || password !== config.auth.password) {
+        return res.status(401).json({ error: 'Invalid credentials' });
+    }
+    const token = jsonwebtoken_1.default.sign({ username }, config.auth.jwt_secret, { expiresIn: '24h' });
+    res.json({ token });
+});
+// Get content endpoint
+app.get('/main/content', verifyToken, (req, res) => {
+    const reqPath = req.query.path || '';
+    if (reqPath === '') {
+        // List root folders
+        const content = config.folders.map(folder => ({
+            name: path.basename(folder),
+            is_folder: true,
+        }));
+        return res.json(content);
+    }
+    // Find the folder that matches the path
+    let baseFolder = '';
+    let relativePath = '';
+    for (const folder of config.folders) {
+        const folderName = path.basename(folder);
+        if (reqPath.startsWith(folderName)) {
+            baseFolder = folder;
+            relativePath = reqPath.substring(folderName.length).replace(/^\/+/, '');
+            break;
+        }
+    }
+    if (!baseFolder) {
+        return res.status(403).json({ error: 'Access denied' });
+    }
+    const fullPath = path.resolve(baseFolder, relativePath);
+    // Ensure the resolved path is within the base folder
+    if (!fullPath.startsWith(path.resolve(baseFolder))) {
+        return res.status(403).json({ error: 'Access denied' });
+    }
+    try {
+        const items = fs.readdirSync(fullPath);
+        const content = items.map(item => {
+            const itemPath = path.join(fullPath, item);
+            const stats = fs.statSync(itemPath);
+            return {
+                name: item,
+                is_folder: stats.isDirectory(),
+                size: stats.isFile() ? stats.size : undefined,
+            };
+        });
+        res.json(content);
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Failed to read directory' });
+    }
+});
+app.listen(config.server.port, () => {
+    console.log(`Server running on port ${config.server.port}`);
+});
