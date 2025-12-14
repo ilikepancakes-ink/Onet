@@ -61,12 +61,16 @@ class _FolderBrowserScreenState extends State<FolderBrowserScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 600;
+    final scale = isMobile ? 1.5 : 1.0;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Files: ${currentPath.isEmpty ? '/' : currentPath}'),
+        title: Text('Files: ${currentPath.isEmpty ? '/' : currentPath}', style: TextStyle(fontSize: 20 * scale)),
         leading: currentPath.isNotEmpty
             ? IconButton(
                 icon: Icon(Icons.arrow_back),
+                iconSize: 24 * scale,
                 onPressed: _goBack,
               )
             : null,
@@ -77,11 +81,14 @@ class _FolderBrowserScreenState extends State<FolderBrowserScreen> {
               itemCount: items.length,
               itemBuilder: (context, index) {
                 final item = items[index];
-                return ListTile(
-                  leading: Icon(item.isFolder ? Icons.folder : Icons.insert_drive_file),
-                  title: Text(item.name),
-                  subtitle: item.size != null ? Text('${item.size} bytes') : null,
-                  onTap: item.isFolder ? () => _navigateToFolder(item.name) : () => _openFile(item.name),
+                return SizedBox(
+                  height: 60 * scale,
+                  child: ListTile(
+                    leading: Icon(item.isFolder ? Icons.folder : Icons.insert_drive_file, size: 24 * scale),
+                    title: Text(item.name, style: TextStyle(fontSize: 16 * scale)),
+                    subtitle: item.size != null ? Text('${item.size} bytes', style: TextStyle(fontSize: 14 * scale)) : null,
+                    onTap: item.isFolder ? () => _navigateToFolder(item.name) : () => _openFile(item.name),
+                  ),
                 );
               },
             ),

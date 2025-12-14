@@ -47,12 +47,16 @@ class _ServerLinkScreenState extends State<ServerLinkScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final appProvider = Provider.of<AppProvider>(context);
+    final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 600;
+    final scale = isMobile ? 1.5 : 1.0;
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.onetFileServer),
+        title: Text(l10n.onetFileServer, style: TextStyle(fontSize: 20 * scale)),
         actions: [
           IconButton(
             icon: Icon(Icons.settings),
+            iconSize: 24 * scale,
             onPressed: () {
               Navigator.push(
                 context,
@@ -63,30 +67,35 @@ class _ServerLinkScreenState extends State<ServerLinkScreen> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0 * scale),
         child: Column(
           children: [
             TextField(
               controller: _controller,
-              decoration: InputDecoration(labelText: l10n.serverUrl),
+              decoration: InputDecoration(labelText: l10n.serverUrl, labelStyle: TextStyle(fontSize: 16 * scale)),
+              style: TextStyle(fontSize: 16 * scale),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20 * scale),
             _isLoading
                 ? CircularProgressIndicator()
                 : ElevatedButton(
                     onPressed: _connect,
-                    child: Text(l10n.connect),
+                    style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 48 * scale)),
+                    child: Text(l10n.connect, style: TextStyle(fontSize: 16 * scale)),
                   ),
             // Recent servers section
             if (appProvider.recentServers.isNotEmpty) ...[
-              SizedBox(height: 40),
-              Text(l10n.recentServers, style: TextStyle(fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
-              ...appProvider.recentServers.take(5).map((url) => ListTile(
-                title: Text(url),
-                onTap: () {
-                  _controller.text = url;
-                },
+              SizedBox(height: 40 * scale),
+              Text(l10n.recentServers, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16 * scale)),
+              SizedBox(height: 10 * scale),
+              ...appProvider.recentServers.take(5).map((url) => SizedBox(
+                height: 60 * scale,
+                child: ListTile(
+                  title: Text(url, style: TextStyle(fontSize: 14 * scale)),
+                  onTap: () {
+                    _controller.text = url;
+                  },
+                ),
               )),
             ],
           ],

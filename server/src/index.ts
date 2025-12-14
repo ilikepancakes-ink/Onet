@@ -231,3 +231,4 @@ app.get('/main/file/download', verifyToken, (req, res) => {
 app.listen(config.server.port, () => {
   console.log(`Server running on port ${config.server.port}`);
 });
+// flutter build ios --release

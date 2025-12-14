@@ -55,16 +55,19 @@ class _FileViewerScreenState extends State<FileViewerScreen> {
   }
 
   Widget _buildContent() {
+    final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 600;
+    final scale = isMobile ? 1.5 : 1.0;
     if (fileData == null) return Container();
 
     final type = fileData!['type'];
     switch (type) {
       case 'text':
         return SingleChildScrollView(
-          padding: EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0 * scale),
           child: SelectableText(
             fileData!['content'] ?? '',
-            style: TextStyle(fontFamily: 'monospace', fontSize: 14),
+            style: TextStyle(fontFamily: 'monospace', fontSize: 14 * scale),
           ),
         );
       case 'image':
@@ -78,7 +81,7 @@ class _FileViewerScreenState extends State<FileViewerScreen> {
               return Center(child: CircularProgressIndicator());
             },
             errorBuilder: (context, error, stackTrace) {
-              return Center(child: Text('Failed to load image'));
+              return Center(child: Text('Failed to load image', style: TextStyle(fontSize: 16 * scale)));
             },
           ),
         );
@@ -94,19 +97,23 @@ class _FileViewerScreenState extends State<FileViewerScreen> {
           return Center(child: CircularProgressIndicator());
         }
       default:
-        return Center(child: Text('Unsupported file type'));
+        return Center(child: Text('Unsupported file type', style: TextStyle(fontSize: 16 * scale)));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 600;
+    final scale = isMobile ? 1.5 : 1.0;
     return Scaffold(
       appBar: AppBar(
-        title: Text('File: ${widget.filePath.split('/').last}'),
+        title: Text('File: ${widget.filePath.split('/').last}', style: TextStyle(fontSize: 20 * scale)),
         actions: fileData != null && fileData!['type'] == 'video' && _videoController != null && _videoController!.value.isInitialized
             ? [
                 IconButton(
                   icon: Icon(_videoController!.value.isPlaying ? Icons.pause : Icons.play_arrow),
+                  iconSize: 24 * scale,
                   onPressed: () {
                     setState(() {
                       _videoController!.value.isPlaying ? _videoController!.pause() : _videoController!.play();
@@ -119,7 +126,7 @@ class _FileViewerScreenState extends State<FileViewerScreen> {
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : error != null
-              ? Center(child: Text(error!))
+              ? Center(child: Text(error!, style: TextStyle(fontSize: 16 * scale)))
               : _buildContent(),
     );
   }

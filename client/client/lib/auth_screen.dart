@@ -66,45 +66,51 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final size = MediaQuery.of(context).size;
+    final isMobile = size.width < 600;
+    final scale = isMobile ? 1.5 : 1.0;
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.authentication)),
+      appBar: AppBar(title: Text(l10n.authentication, style: TextStyle(fontSize: 20 * scale))),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16.0 * scale),
         child: Column(
           children: [
             // Centered prompt
             Center(
               child: Column(
                 children: [
-                  Text('${l10n.server}: ${widget.serverInfo.name}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  Text('${l10n.version}: ${widget.serverInfo.version}'),
-                  Text('${l10n.country}: ${widget.serverInfo.country}'),
+                  Text('${l10n.server}: ${widget.serverInfo.name}', style: TextStyle(fontSize: 18 * scale, fontWeight: FontWeight.bold)),
+                  Text('${l10n.version}: ${widget.serverInfo.version}', style: TextStyle(fontSize: 14 * scale)),
+                  Text('${l10n.country}: ${widget.serverInfo.country}', style: TextStyle(fontSize: 14 * scale)),
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20 * scale),
             TextField(
               controller: _userController,
-              decoration: InputDecoration(labelText: l10n.username),
+              decoration: InputDecoration(labelText: l10n.username, labelStyle: TextStyle(fontSize: 16 * scale)),
+              style: TextStyle(fontSize: 16 * scale),
             ),
             TextField(
               controller: _passController,
               obscureText: true,
-              decoration: InputDecoration(labelText: l10n.password),
+              decoration: InputDecoration(labelText: l10n.password, labelStyle: TextStyle(fontSize: 16 * scale)),
+              style: TextStyle(fontSize: 16 * scale),
             ),
             CheckboxListTile(
-              title: Text(l10n.rememberCredentials),
+              title: Text(l10n.rememberCredentials, style: TextStyle(fontSize: 14 * scale)),
               value: _rememberCredentials,
               onChanged: (value) {
                 setState(() => _rememberCredentials = value ?? false);
               },
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20 * scale),
             _isLoading
                 ? CircularProgressIndicator()
                 : ElevatedButton(
                     onPressed: _login,
-                    child: Text(l10n.login),
+                    style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 48 * scale)),
+                    child: Text(l10n.login, style: TextStyle(fontSize: 16 * scale)),
                   ),
           ],
         ),
