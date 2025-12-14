@@ -1,0 +1,17 @@
+{
+  "settings": "Paramètres",
+  "theme": "Thème",
+  "language": "Langue",
+  "system": "Système",
+  "light": "Clair",
+  "dark": "Sombre",
+  "english": "Anglais",
+  "spanish": "Espagnol",
+  "french": "Français",
+  "dutch": "Néerlandais",
+  "german": "Allemand",
+  "russian": "Russe",
+  "swedish": "Suédois",
+  "korean": "Coréen",
+  "slovakian": "Slovaque"
+}

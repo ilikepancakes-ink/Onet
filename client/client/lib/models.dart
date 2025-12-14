@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class ServerInfo {
   final String name;
   final String version;
@@ -47,6 +49,48 @@ class ContentItem {
       name: json['name'] ?? '',
       isFolder: json['is_folder'] ?? false,
       size: json['size'],
+    );
+  }
+}
+
+class AppSettings {
+  ThemeMode themeMode;
+  String language;
+
+  AppSettings({required this.themeMode, required this.language});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'themeMode': themeMode.index,
+      'language': language,
+    };
+  }
+
+  factory AppSettings.fromJson(Map<String, dynamic> json) {
+    return AppSettings(
+      themeMode: ThemeMode.values[json['themeMode'] ?? 0],
+      language: json['language'] ?? 'en',
+    );
+  }
+}
+
+class Credentials {
+  final String username;
+  final String password;
+
+  Credentials({required this.username, required this.password});
+
+  Map<String, dynamic> toJson() {
+    return {
+      'username': username,
+      'password': password,
+    };
+  }
+
+  factory Credentials.fromJson(Map<String, dynamic> json) {
+    return Credentials(
+      username: json['username'] ?? '',
+      password: json['password'] ?? '',
     );
   }
 }
