@@ -49,3 +49,4 @@ app.*.map.json
 /client/client/android/.gradle/
 /server/node_modules/
 /server/config.yml
+client/client/macos/Podfile.lock
