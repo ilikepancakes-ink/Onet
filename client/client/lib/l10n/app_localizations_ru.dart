@@ -63,53 +63,53 @@ class AppLocalizationsRu extends AppLocalizations {
   String get connect => 'Connect';
 
   @override
-  String get failedToConnect => 'Не удалось подключиться к серверу';
+  String get failedToConnect => 'Failed to connect to server';
 
   @override
-  String get authentication => 'Аутентификация';
+  String get authentication => 'Authentication';
 
   @override
-  String get server => 'Сервер';
+  String get server => 'Server';
 
   @override
-  String get version => 'Версия';
+  String get version => 'Version';
 
   @override
-  String get country => 'Страна';
+  String get country => 'Country';
 
   @override
-  String get recentServers => 'Недавние серверы';
+  String get recentServers => 'Recent Servers';
 
   @override
-  String get username => 'Имя пользователя';
+  String get username => 'Username';
 
   @override
-  String get password => 'Пароль';
+  String get password => 'Password';
 
   @override
-  String get rememberCredentials => 'Запомнить учетные данные';
+  String get rememberCredentials => 'Remember credentials';
 
   @override
-  String get login => 'Войти';
+  String get login => 'Login';
 
   @override
-  String get authenticationFailed => 'Ошибка аутентификации';
+  String get authenticationFailed => 'Authentication failed';
 
   @override
-  String get files => 'Файлы';
+  String get files => 'Files';
 
   @override
-  String get bytes => 'байтов';
+  String get bytes => 'bytes';
 
   @override
-  String get file => 'Файл';
+  String get file => 'File';
 
   @override
-  String get failedToLoadFileContent => 'Не удалось загрузить содержимое файла';
+  String get failedToLoadFileContent => 'Failed to load file content';
 
   @override
-  String get failedToLoadImage => 'Не удалось загрузить изображение';
+  String get failedToLoadImage => 'Failed to load image';
 
   @override
-  String get unsupportedFileType => 'Неподдерживаемый тип файла';
+  String get unsupportedFileType => 'Unsupported file type';
 }

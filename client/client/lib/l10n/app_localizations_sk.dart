@@ -63,53 +63,53 @@ class AppLocalizationsSk extends AppLocalizations {
   String get connect => 'Connect';
 
   @override
-  String get failedToConnect => 'Nepodarilo sa pripojiť k serveru';
+  String get failedToConnect => 'Failed to connect to server';
 
   @override
-  String get authentication => 'Overenie';
+  String get authentication => 'Authentication';
 
   @override
   String get server => 'Server';
 
   @override
-  String get version => 'Verzia';
+  String get version => 'Version';
 
   @override
-  String get country => 'Krajina';
+  String get country => 'Country';
 
   @override
-  String get recentServers => 'Nedávne servery';
+  String get recentServers => 'Recent Servers';
 
   @override
-  String get username => 'Používateľské meno';
+  String get username => 'Username';
 
   @override
-  String get password => 'Heslo';
+  String get password => 'Password';
 
   @override
-  String get rememberCredentials => 'Zapamätať si prihlasovacie údaje';
+  String get rememberCredentials => 'Remember credentials';
 
   @override
-  String get login => 'Prihlásiť sa';
+  String get login => 'Login';
 
   @override
-  String get authenticationFailed => 'Overenie zlyhalo';
+  String get authenticationFailed => 'Authentication failed';
 
   @override
-  String get files => 'Súbory';
+  String get files => 'Files';
 
   @override
-  String get bytes => 'bajtov';
+  String get bytes => 'bytes';
 
   @override
-  String get file => 'Súbor';
+  String get file => 'File';
 
   @override
-  String get failedToLoadFileContent => 'Nepodarilo sa načítať obsah súboru';
+  String get failedToLoadFileContent => 'Failed to load file content';
 
   @override
-  String get failedToLoadImage => 'Nepodarilo sa načítať obrázok';
+  String get failedToLoadImage => 'Failed to load image';
 
   @override
-  String get unsupportedFileType => 'Nepodporovaný typ súboru';
+  String get unsupportedFileType => 'Unsupported file type';
 }

@@ -66,50 +66,50 @@ class AppLocalizationsEs extends AppLocalizations {
   String get failedToConnect => 'Error al conectar con el servidor';
 
   @override
-  String get authentication => 'Autenticación';
+  String get authentication => 'Authentication';
 
   @override
-  String get server => 'Servidor';
+  String get server => 'Server';
 
   @override
-  String get version => 'Versión';
+  String get version => 'Version';
 
   @override
-  String get country => 'País';
+  String get country => 'Country';
 
   @override
-  String get recentServers => 'Servidores Recientes';
+  String get recentServers => 'Recent Servers';
 
   @override
-  String get username => 'Nombre de usuario';
+  String get username => 'Username';
 
   @override
-  String get password => 'Contraseña';
+  String get password => 'Password';
 
   @override
-  String get rememberCredentials => 'Recordar credenciales';
+  String get rememberCredentials => 'Remember credentials';
 
   @override
-  String get login => 'Iniciar sesión';
+  String get login => 'Login';
 
   @override
-  String get authenticationFailed => 'Error de autenticación';
+  String get authenticationFailed => 'Authentication failed';
 
   @override
-  String get files => 'Archivos';
+  String get files => 'Files';
 
   @override
   String get bytes => 'bytes';
 
   @override
-  String get file => 'Archivo';
+  String get file => 'File';
 
   @override
-  String get failedToLoadFileContent => 'Error al cargar el contenido del archivo';
+  String get failedToLoadFileContent => 'Failed to load file content';
 
   @override
-  String get failedToLoadImage => 'Error al cargar la imagen';
+  String get failedToLoadImage => 'Failed to load image';
 
   @override
-  String get unsupportedFileType => 'Tipo de archivo no soportado';
+  String get unsupportedFileType => 'Unsupported file type';
 }

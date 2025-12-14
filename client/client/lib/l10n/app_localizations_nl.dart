@@ -63,53 +63,53 @@ class AppLocalizationsNl extends AppLocalizations {
   String get connect => 'Connect';
 
   @override
-  String get failedToConnect => 'Verbinding met server mislukt';
+  String get failedToConnect => 'Failed to connect to server';
 
   @override
-  String get authentication => 'Authenticatie';
+  String get authentication => 'Authentication';
 
   @override
   String get server => 'Server';
 
   @override
-  String get version => 'Versie';
+  String get version => 'Version';
 
   @override
-  String get country => 'Land';
+  String get country => 'Country';
 
   @override
-  String get recentServers => 'Recente Servers';
+  String get recentServers => 'Recent Servers';
 
   @override
-  String get username => 'Gebruikersnaam';
+  String get username => 'Username';
 
   @override
-  String get password => 'Wachtwoord';
+  String get password => 'Password';
 
   @override
-  String get rememberCredentials => 'Inloggegevens onthouden';
+  String get rememberCredentials => 'Remember credentials';
 
   @override
-  String get login => 'Inloggen';
+  String get login => 'Login';
 
   @override
-  String get authenticationFailed => 'Authenticatie mislukt';
+  String get authenticationFailed => 'Authentication failed';
 
   @override
-  String get files => 'Bestanden';
+  String get files => 'Files';
 
   @override
   String get bytes => 'bytes';
 
   @override
-  String get file => 'Bestand';
+  String get file => 'File';
 
   @override
-  String get failedToLoadFileContent => 'Kan bestandsinhoud niet laden';
+  String get failedToLoadFileContent => 'Failed to load file content';
 
   @override
-  String get failedToLoadImage => 'Kan afbeelding niet laden';
+  String get failedToLoadImage => 'Failed to load image';
 
   @override
-  String get unsupportedFileType => 'Niet-ondersteund bestandstype';
+  String get unsupportedFileType => 'Unsupported file type';
 }

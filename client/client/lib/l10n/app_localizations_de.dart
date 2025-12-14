@@ -63,53 +63,53 @@ class AppLocalizationsDe extends AppLocalizations {
   String get connect => 'Connect';
 
   @override
-  String get failedToConnect => 'Verbindung zum Server fehlgeschlagen';
+  String get failedToConnect => 'Failed to connect to server';
 
   @override
-  String get authentication => 'Authentifizierung';
-
-  @override
-  String get authenticationFailed => 'Authentifizierung fehlgeschlagen';
-
-  @override
-  String get bytes => 'Bytes';
-
-  @override
-  String get country => 'Land';
-
-  @override
-  String get failedToLoadFileContent => 'Dateiinhalt konnte nicht geladen werden';
-
-  @override
-  String get failedToLoadImage => 'Bild konnte nicht geladen werden';
-
-  @override
-  String get file => 'Datei';
-
-  @override
-  String get files => 'Dateien';
-
-  @override
-  String get login => 'Anmelden';
-
-  @override
-  String get password => 'Passwort';
-
-  @override
-  String get recentServers => 'Letzte Server';
-
-  @override
-  String get rememberCredentials => 'Anmeldedaten merken';
+  String get authentication => 'Authentication';
 
   @override
   String get server => 'Server';
 
   @override
-  String get unsupportedFileType => 'Nicht unterstützter Dateityp';
-
-  @override
-  String get username => 'Benutzername';
-
-  @override
   String get version => 'Version';
+
+  @override
+  String get country => 'Country';
+
+  @override
+  String get recentServers => 'Recent Servers';
+
+  @override
+  String get username => 'Username';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get rememberCredentials => 'Remember credentials';
+
+  @override
+  String get login => 'Login';
+
+  @override
+  String get authenticationFailed => 'Authentication failed';
+
+  @override
+  String get files => 'Files';
+
+  @override
+  String get bytes => 'bytes';
+
+  @override
+  String get file => 'File';
+
+  @override
+  String get failedToLoadFileContent => 'Failed to load file content';
+
+  @override
+  String get failedToLoadImage => 'Failed to load image';
+
+  @override
+  String get unsupportedFileType => 'Unsupported file type';
 }

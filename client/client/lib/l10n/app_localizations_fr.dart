@@ -54,62 +54,62 @@ class AppLocalizationsFr extends AppLocalizations {
   String get slovakian => 'Slovaque';
 
   @override
-  String get onetFileServer => 'Serveur de fichiers Onet';
+  String get onetFileServer => 'Onet File Server';
 
   @override
-  String get serverUrl => 'URL du serveur';
+  String get serverUrl => 'Server URL';
 
   @override
-  String get connect => 'Se connecter';
+  String get connect => 'Connect';
 
   @override
-  String get failedToConnect => 'Échec de la connexion au serveur';
+  String get failedToConnect => 'Failed to connect to server';
 
   @override
-  String get authentication => 'Authentification';
+  String get authentication => 'Authentication';
 
   @override
-  String get server => 'Serveur';
+  String get server => 'Server';
 
   @override
   String get version => 'Version';
 
   @override
-  String get country => 'Pays';
+  String get country => 'Country';
 
   @override
-  String get recentServers => 'Serveurs récents';
+  String get recentServers => 'Recent Servers';
 
   @override
-  String get username => 'Nom d\'utilisateur';
+  String get username => 'Username';
 
   @override
-  String get password => 'Mot de passe';
+  String get password => 'Password';
 
   @override
-  String get rememberCredentials => 'Se souvenir des identifiants';
+  String get rememberCredentials => 'Remember credentials';
 
   @override
-  String get login => 'Se connecter';
+  String get login => 'Login';
 
   @override
-  String get authenticationFailed => 'Échec de l\'authentification';
+  String get authenticationFailed => 'Authentication failed';
 
   @override
-  String get files => 'Fichiers';
+  String get files => 'Files';
 
   @override
-  String get bytes => 'octets';
+  String get bytes => 'bytes';
 
   @override
-  String get file => 'Fichier';
+  String get file => 'File';
 
   @override
-  String get failedToLoadFileContent => 'Échec du chargement du contenu du fichier';
+  String get failedToLoadFileContent => 'Failed to load file content';
 
   @override
-  String get failedToLoadImage => 'Échec du chargement de l\'image';
+  String get failedToLoadImage => 'Failed to load image';
 
   @override
-  String get unsupportedFileType => 'Type de fichier non pris en charge';
+  String get unsupportedFileType => 'Unsupported file type';
 }

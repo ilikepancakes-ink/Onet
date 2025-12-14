@@ -63,10 +63,10 @@ class AppLocalizationsSv extends AppLocalizations {
   String get connect => 'Connect';
 
   @override
-  String get failedToConnect => 'Misslyckades att ansluta till servern';
+  String get failedToConnect => 'Failed to connect to server';
 
   @override
-  String get authentication => 'Autentisering';
+  String get authentication => 'Authentication';
 
   @override
   String get server => 'Server';
@@ -75,41 +75,41 @@ class AppLocalizationsSv extends AppLocalizations {
   String get version => 'Version';
 
   @override
-  String get country => 'Land';
+  String get country => 'Country';
 
   @override
-  String get recentServers => 'Senaste servrar';
+  String get recentServers => 'Recent Servers';
 
   @override
-  String get username => 'Användarnamn';
+  String get username => 'Username';
 
   @override
-  String get password => 'Lösenord';
+  String get password => 'Password';
 
   @override
-  String get rememberCredentials => 'Kom ihåg inloggningsuppgifter';
+  String get rememberCredentials => 'Remember credentials';
 
   @override
-  String get login => 'Logga in';
+  String get login => 'Login';
 
   @override
-  String get authenticationFailed => 'Autentisering misslyckades';
+  String get authenticationFailed => 'Authentication failed';
 
   @override
-  String get files => 'Filer';
+  String get files => 'Files';
 
   @override
   String get bytes => 'bytes';
 
   @override
-  String get file => 'Fil';
+  String get file => 'File';
 
   @override
-  String get failedToLoadFileContent => 'Misslyckades att ladda filinnehåll';
+  String get failedToLoadFileContent => 'Failed to load file content';
 
   @override
-  String get failedToLoadImage => 'Misslyckades att ladda bild';
+  String get failedToLoadImage => 'Failed to load image';
 
   @override
-  String get unsupportedFileType => 'Filtypen stöds inte';
+  String get unsupportedFileType => 'Unsupported file type';
 }

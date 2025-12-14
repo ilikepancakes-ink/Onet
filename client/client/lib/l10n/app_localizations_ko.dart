@@ -63,53 +63,53 @@ class AppLocalizationsKo extends AppLocalizations {
   String get connect => 'Connect';
 
   @override
-  String get failedToConnect => '서버 연결 실패';
+  String get failedToConnect => 'Failed to connect to server';
 
   @override
-  String get authentication => '인증';
+  String get authentication => 'Authentication';
 
   @override
-  String get server => '서버';
+  String get server => 'Server';
 
   @override
-  String get version => '버전';
+  String get version => 'Version';
 
   @override
-  String get country => '국가';
+  String get country => 'Country';
 
   @override
-  String get recentServers => '최근 서버';
+  String get recentServers => 'Recent Servers';
 
   @override
-  String get username => '사용자 이름';
+  String get username => 'Username';
 
   @override
-  String get password => '비밀번호';
+  String get password => 'Password';
 
   @override
-  String get rememberCredentials => '자격 증명 기억';
+  String get rememberCredentials => 'Remember credentials';
 
   @override
-  String get login => '로그인';
+  String get login => 'Login';
 
   @override
-  String get authenticationFailed => '인증 실패';
+  String get authenticationFailed => 'Authentication failed';
 
   @override
-  String get files => '파일';
+  String get files => 'Files';
 
   @override
-  String get bytes => '바이트';
+  String get bytes => 'bytes';
 
   @override
-  String get file => '파일';
+  String get file => 'File';
 
   @override
-  String get failedToLoadFileContent => '파일 내용을 로드하지 못했습니다';
+  String get failedToLoadFileContent => 'Failed to load file content';
 
   @override
-  String get failedToLoadImage => '이미지를 로드하지 못했습니다';
+  String get failedToLoadImage => 'Failed to load image';
 
   @override
-  String get unsupportedFileType => '지원되지 않는 파일 형식';
+  String get unsupportedFileType => 'Unsupported file type';
 }
