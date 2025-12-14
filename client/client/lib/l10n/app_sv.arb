@@ -1,0 +1,17 @@
+{
+  "settings": "Inställningar",
+  "theme": "Tema",
+  "language": "Språk",
+  "system": "System",
+  "light": "Ljust",
+  "dark": "Mörkt",
+  "english": "Engelska",
+  "spanish": "Spanska",
+  "french": "Franska",
+  "dutch": "Nederländska",
+  "german": "Tyska",
+  "russian": "Ryska",
+  "swedish": "Svenska",
+  "korean": "Koreanska",
+  "slovakian": "Slovakiska"
+}

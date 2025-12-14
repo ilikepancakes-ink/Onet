@@ -1,0 +1,17 @@
+{
+  "settings": "Instellingen",
+  "theme": "Thema",
+  "language": "Taal",
+  "system": "Systeem",
+  "light": "Licht",
+  "dark": "Donker",
+  "english": "Engels",
+  "spanish": "Spaans",
+  "french": "Frans",
+  "dutch": "Nederlands",
+  "german": "Duits",
+  "russian": "Russisch",
+  "swedish": "Zweeds",
+  "korean": "Koreaans",
+  "slovakian": "Slowaaks"
+}

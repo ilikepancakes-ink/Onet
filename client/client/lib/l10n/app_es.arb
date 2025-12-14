@@ -1,0 +1,21 @@
+{
+  "settings": "Configuración",
+  "theme": "Tema",
+  "language": "Idioma",
+  "system": "Sistema",
+  "light": "Claro",
+  "dark": "Oscuro",
+  "english": "Inglés",
+  "spanish": "Español",
+  "french": "Francés",
+  "dutch": "Holandés",
+  "german": "Alemán",
+  "russian": "Ruso",
+  "swedish": "Sueco",
+  "korean": "Coreano",
+  "slovakian": "Eslovaco",
+  "onetFileServer": "Servidor de Archivos Onet",
+  "serverUrl": "URL del Servidor",
+  "connect": "Conectar",
+  "failedToConnect": "Error al conectar con el servidor"
+}

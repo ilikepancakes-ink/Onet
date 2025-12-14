@@ -1,0 +1,17 @@
+{
+  "settings": "Nastavenia",
+  "theme": "Téma",
+  "language": "Jazyk",
+  "system": "Systém",
+  "light": "Svetlá",
+  "dark": "Tmavá",
+  "english": "Angličtina",
+  "spanish": "Španielčina",
+  "french": "Francúzština",
+  "dutch": "Holandčina",
+  "german": "Nemčina",
+  "russian": "Ruština",
+  "swedish": "Švédčina",
+  "korean": "Kórejčina",
+  "slovakian": "Slovenčina"
+}

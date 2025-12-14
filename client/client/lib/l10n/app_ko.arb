@@ -1,0 +1,17 @@
+{
+  "settings": "설정",
+  "theme": "테마",
+  "language": "언어",
+  "system": "시스템",
+  "light": "밝음",
+  "dark": "어두움",
+  "english": "영어",
+  "spanish": "스페인어",
+  "french": "프랑스어",
+  "dutch": "네덜란드어",
+  "german": "독일어",
+  "russian": "러시아어",
+  "swedish": "스웨덴어",
+  "korean": "한국어",
+  "slovakian": "슬로바키아어"
+}
