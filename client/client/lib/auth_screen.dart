@@ -7,7 +7,7 @@ class AuthScreen extends StatefulWidget {
   final ApiService api;
   final ServerInfo serverInfo;
 
-  AuthScreen({required this.api, required this.serverInfo});
+  const AuthScreen({super.key, required this.api, required this.serverInfo});
 
   @override
   _AuthScreenState createState() => _AuthScreenState();

@@ -6,7 +6,7 @@ class FileViewerScreen extends StatefulWidget {
   final ApiService api;
   final String filePath;
 
-  FileViewerScreen({required this.api, required this.filePath});
+  const FileViewerScreen({super.key, required this.api, required this.filePath});
 
   @override
   _FileViewerScreenState createState() => _FileViewerScreenState();

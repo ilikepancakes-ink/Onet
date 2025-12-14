@@ -6,7 +6,7 @@ import 'file_viewer_screen.dart';
 class FolderBrowserScreen extends StatefulWidget {
   final ApiService api;
 
-  FolderBrowserScreen({required this.api});
+  const FolderBrowserScreen({super.key, required this.api});
 
   @override
   _FolderBrowserScreenState createState() => _FolderBrowserScreenState();

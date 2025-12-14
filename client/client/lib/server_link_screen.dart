@@ -4,6 +4,8 @@ import 'models.dart';
 import 'auth_screen.dart';
 
 class ServerLinkScreen extends StatefulWidget {
+  const ServerLinkScreen({super.key});
+
   @override
   _ServerLinkScreenState createState() => _ServerLinkScreenState();
 }
