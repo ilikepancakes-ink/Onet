@@ -42,6 +42,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const yaml = __importStar(require("js-yaml"));
+const mime = __importStar(require("mime-types"));
 // Load config
 const config = yaml.load(fs.readFileSync(path.join(__dirname, '../config.yml'), 'utf8'));
 const app = (0, express_1.default)();
@@ -51,11 +52,13 @@ app.use(express_1.default.json());
 const verifyToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
+        console.log('No token provided');
         return res.status(401).json({ error: 'No token provided' });
     }
     const token = authHeader.split(' ')[1];
     jsonwebtoken_1.default.verify(token, config.auth.jwt_secret, (err) => {
         if (err) {
+            console.log('Invalid token:', err.message);
             return res.status(403).json({ error: 'Invalid token' });
         }
         next();
@@ -101,6 +104,7 @@ app.get('/main/content', verifyToken, (req, res) => {
         }
     }
     if (!baseFolder) {
+        console.log('Access denied for path:', reqPath);
         return res.status(403).json({ error: 'Access denied' });
     }
     const fullPath = path.resolve(baseFolder, relativePath);
@@ -122,9 +126,98 @@ app.get('/main/content', verifyToken, (req, res) => {
         res.json(content);
     }
     catch (error) {
+        console.log('Failed to read directory:', fullPath, error);
         res.status(500).json({ error: 'Failed to read directory' });
+    }
+});
+app.get('/main/file', verifyToken, (req, res) => {
+    const reqPath = req.query.path;
+    if (!reqPath) {
+        return res.status(400).json({ error: 'Path required' });
+    }
+    // Find the folder that matches the path
+    let baseFolder = '';
+    let relativePath = '';
+    for (const folder of config.folders) {
+        const folderName = path.basename(folder);
+        if (reqPath.startsWith(folderName)) {
+            baseFolder = folder;
+            relativePath = reqPath.substring(folderName.length).replace(/^\/+/, '');
+            break;
+        }
+    }
+    if (!baseFolder) {
+        return res.status(403).json({ error: 'Access denied' });
+    }
+    const fullPath = path.resolve(baseFolder, relativePath);
+    // Ensure the resolved path is within the base folder
+    if (!fullPath.startsWith(path.resolve(baseFolder))) {
+        return res.status(403).json({ error: 'Access denied' });
+    }
+    try {
+        const stats = fs.statSync(fullPath);
+        if (!stats.isFile()) {
+            return res.status(400).json({ error: 'Not a file' });
+        }
+        const mimeType = mime.lookup(fullPath) || 'application/octet-stream';
+        const isText = mimeType.startsWith('text/') || mimeType === 'application/json' || mimeType.includes('javascript') || mimeType.includes('xml');
+        const isImage = mimeType.startsWith('image/');
+        const isVideo = mimeType.startsWith('video/');
+        if (isText) {
+            const content = fs.readFileSync(fullPath, 'utf8');
+            res.json({ type: 'text', content });
+        }
+        else if (isImage || isVideo) {
+            res.json({ type: isImage ? 'image' : 'video', url: `/main/file/download?path=${encodeURIComponent(reqPath)}` });
+        }
+        else {
+            res.json({ type: 'unknown' });
+        }
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Failed to read file' });
+    }
+});
+app.get('/main/file/download', verifyToken, (req, res) => {
+    const reqPath = req.query.path;
+    if (!reqPath) {
+        return res.status(400).json({ error: 'Path required' });
+    }
+    // Find the folder that matches the path
+    let baseFolder = '';
+    let relativePath = '';
+    for (const folder of config.folders) {
+        const folderName = path.basename(folder);
+        if (reqPath.startsWith(folderName)) {
+            baseFolder = folder;
+            relativePath = reqPath.substring(folderName.length).replace(/^\/+/, '');
+            break;
+        }
+    }
+    if (!baseFolder) {
+        return res.status(403).json({ error: 'Access denied' });
+    }
+    const fullPath = path.resolve(baseFolder, relativePath);
+    // Ensure the resolved path is within the base folder
+    if (!fullPath.startsWith(path.resolve(baseFolder))) {
+        return res.status(403).json({ error: 'Access denied' });
+    }
+    try {
+        const stats = fs.statSync(fullPath);
+        if (!stats.isFile()) {
+            return res.status(400).json({ error: 'Not a file' });
+        }
+        const mimeType = mime.lookup(fullPath) || 'application/octet-stream';
+        res.setHeader('Content-Type', mimeType);
+        res.setHeader('Content-Length', stats.size);
+        const stream = fs.createReadStream(fullPath);
+        stream.pipe(res);
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Failed to read file' });
     }
 });
 app.listen(config.server.port, () => {
     console.log(`Server running on port ${config.server.port}`);
 });
+// flutter build ios --release
