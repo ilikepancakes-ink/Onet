@@ -74,6 +74,7 @@ class _ServerLinkScreenState extends State<ServerLinkScreen> {
               controller: _controller,
               decoration: InputDecoration(labelText: l10n.serverUrl, labelStyle: TextStyle(fontSize: 16 * scale)),
               style: TextStyle(fontSize: 16 * scale),
+              contextMenuBuilder: null,
             ),
             SizedBox(height: 20 * scale),
             _isLoading

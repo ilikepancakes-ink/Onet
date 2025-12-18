@@ -40,18 +40,20 @@ class ApiService {
     return null;
   }
 
-  Future<List<ContentItem>> getContent({String path = ''}) async {
+  Future<List<ContentItem>?> getContent({String path = ''}) async {
     try {
       final uri = Uri.parse('$baseUrl/main/content').replace(queryParameters: path.isNotEmpty ? {'path': path} : null);
       final response = await http.get(uri, headers: {'Authorization': 'Bearer $token'});
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body) as List;
         return json.map((item) => ContentItem.fromJson(item)).toList();
+      } else {
+        print('Error getting content: ${response.statusCode} ${response.body}');
       }
     } catch (e) {
       print('Error getting content: $e');
     }
-    return [];
+    return null;
   }
 
   Future<Map<String, dynamic>?> getFileContent(String path) async {
@@ -61,6 +63,8 @@ class ApiService {
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         return json;
+      } else {
+        print('Error getting file content: ${response.statusCode} ${response.body}');
       }
     } catch (e) {
       print('Error getting file content: $e');

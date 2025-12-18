@@ -3,12 +3,12 @@ server:
   name: "Onet File Server"
   version: "1.0.0"
   country: "US"
-  port: 3000
+  port: 5454
 
 # Folders to host
 folders:
-  - "/home/ilikepancakes/shared"
-  - "/home/ilikepancakes/documents"
+  - "/Users/ilikepancakes/shared"
+  - "/Users/ilikepancakes/documents"
 
 # Authentication
 auth:

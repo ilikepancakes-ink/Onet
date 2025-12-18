@@ -16,6 +16,7 @@ class _FolderBrowserScreenState extends State<FolderBrowserScreen> {
   String currentPath = '';
   List<ContentItem> items = [];
   bool _isLoading = true;
+  String? errorMessage;
 
   @override
   void initState() {
@@ -27,7 +28,8 @@ class _FolderBrowserScreenState extends State<FolderBrowserScreen> {
     setState(() => _isLoading = true);
     final content = await widget.api.getContent(path: currentPath);
     setState(() {
-      items = content;
+      items = content ?? [];
+      errorMessage = content == null ? 'Failed to load content' : null;
       _isLoading = false;
     });
   }
@@ -77,21 +79,23 @@ class _FolderBrowserScreenState extends State<FolderBrowserScreen> {
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: items.length,
-              itemBuilder: (context, index) {
-                final item = items[index];
-                return SizedBox(
-                  height: 60 * scale,
-                  child: ListTile(
-                    leading: Icon(item.isFolder ? Icons.folder : Icons.insert_drive_file, size: 24 * scale),
-                    title: Text(item.name, style: TextStyle(fontSize: 16 * scale)),
-                    subtitle: item.size != null ? Text('${item.size} bytes', style: TextStyle(fontSize: 14 * scale)) : null,
-                    onTap: item.isFolder ? () => _navigateToFolder(item.name) : () => _openFile(item.name),
-                  ),
-                );
-              },
-            ),
+          : errorMessage != null
+              ? Center(child: Text(errorMessage!, style: TextStyle(fontSize: 16 * scale)))
+              : ListView.builder(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    final item = items[index];
+                    return SizedBox(
+                      height: 60 * scale,
+                      child: ListTile(
+                        leading: Icon(item.isFolder ? Icons.folder : Icons.insert_drive_file, size: 24 * scale),
+                        title: Text(item.name, style: TextStyle(fontSize: 16 * scale)),
+                        subtitle: item.size != null ? Text('${item.size} bytes', style: TextStyle(fontSize: 14 * scale)) : null,
+                        onTap: item.isFolder ? () => _navigateToFolder(item.name) : () => _openFile(item.name),
+                      ),
+                    );
+                  },
+                ),
     );
   }
 }

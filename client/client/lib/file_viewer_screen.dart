@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'api_service.dart';
 
 class FileViewerScreen extends StatefulWidget {
@@ -38,6 +39,7 @@ class _FileViewerScreenState extends State<FileViewerScreen> {
       _isLoading = false;
       if (data == null) {
         error = 'Failed to load file content';
+        print('Failed to load file content for ${widget.filePath}');
       } else if (data['type'] == 'video' && data['url'] != null) {
         _initializeVideo(data['url']);
       }
@@ -101,6 +103,18 @@ class _FileViewerScreenState extends State<FileViewerScreen> {
     }
   }
 
+  void _downloadFile() async {
+    final downloadUrl = '${widget.api.baseUrl}/main/file/download?path=${Uri.encodeComponent(widget.filePath)}';
+    final uri = Uri.parse(downloadUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not open download link')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -127,7 +141,19 @@ class _FileViewerScreenState extends State<FileViewerScreen> {
           ? Center(child: CircularProgressIndicator())
           : error != null
               ? Center(child: Text(error!, style: TextStyle(fontSize: 16 * scale)))
-              : _buildContent(),
+              : Column(
+                  children: [
+                    Expanded(child: _buildContent()),
+                    Padding(
+                      padding: EdgeInsets.all(16.0 * scale),
+                      child: ElevatedButton(
+                        onPressed: _downloadFile,
+                        style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 48 * scale)),
+                        child: Text('Download File', style: TextStyle(fontSize: 16 * scale)),
+                      ),
+                    ),
+                  ],
+                ),
     );
   }
 }

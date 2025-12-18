@@ -39,12 +39,14 @@ app.use(express.json());
 const verifyToken = (req: express.Request, res: express.Response, next: express.NextFunction) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
+    console.log('No token provided');
     return res.status(401).json({ error: 'No token provided' });
   }
 
   const token = authHeader.split(' ')[1];
   jwt.verify(token, config.auth.jwt_secret, (err) => {
     if (err) {
+      console.log('Invalid token:', err.message);
       return res.status(403).json({ error: 'Invalid token' });
     }
     next();
@@ -99,6 +101,7 @@ app.get('/main/content', verifyToken, (req, res) => {
   }
 
   if (!baseFolder) {
+    console.log('Access denied for path:', reqPath);
     return res.status(403).json({ error: 'Access denied' });
   }
 
@@ -122,6 +125,7 @@ app.get('/main/content', verifyToken, (req, res) => {
     });
     res.json(content);
   } catch (error) {
+    console.log('Failed to read directory:', fullPath, error);
     res.status(500).json({ error: 'Failed to read directory' });
   }
 });

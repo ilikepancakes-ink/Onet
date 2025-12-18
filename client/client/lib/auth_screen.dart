@@ -90,12 +90,14 @@ class _AuthScreenState extends State<AuthScreen> {
               controller: _userController,
               decoration: InputDecoration(labelText: l10n.username, labelStyle: TextStyle(fontSize: 16 * scale)),
               style: TextStyle(fontSize: 16 * scale),
+              contextMenuBuilder: null,
             ),
             TextField(
               controller: _passController,
               obscureText: true,
               decoration: InputDecoration(labelText: l10n.password, labelStyle: TextStyle(fontSize: 16 * scale)),
               style: TextStyle(fontSize: 16 * scale),
+              contextMenuBuilder: null,
             ),
             CheckboxListTile(
               title: Text(l10n.rememberCredentials, style: TextStyle(fontSize: 14 * scale)),
