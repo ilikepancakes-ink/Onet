@@ -51,3 +51,4 @@ app.*.map.json
 /client/client/macos/Podfile.lock
 /server/
 server/config.yml
+client/client/ios/Podfile.lock
