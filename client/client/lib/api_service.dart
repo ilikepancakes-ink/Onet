@@ -71,4 +71,31 @@ class ApiService {
     }
     return null;
   }
+
+  Future<bool> uploadFile(String path, String filename, List<int> data, int chunkIndex, int totalChunks) async {
+    try {
+      final uri = Uri.parse('$baseUrl/main/upload');
+      final response = await http.post(
+        uri,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'path': path,
+          'filename': filename,
+          'data': base64Encode(data),
+          'chunkIndex': chunkIndex,
+          'totalChunks': totalChunks,
+        }),
+      );
+      if (response.statusCode == 200) {
+        final json = jsonDecode(response.body);
+        return json['message'] == 'File uploaded successfully';
+      }
+    } catch (e) {
+      print('Error uploading file: $e');
+    }
+    return false;
+  }
 }

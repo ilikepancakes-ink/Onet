@@ -217,6 +217,58 @@ app.get('/main/file/download', verifyToken, (req, res) => {
         res.status(500).json({ error: 'Failed to read file' });
     }
 });
+// Upload file endpoint
+app.post('/main/upload', verifyToken, (req, res) => {
+    const { path: reqPath, filename, data, chunkIndex, totalChunks } = req.body;
+    if (!reqPath || !filename || !data || chunkIndex === undefined || totalChunks === undefined) {
+        return res.status(400).json({ error: 'Missing required fields' });
+    }
+    // Find the folder that matches the path
+    let baseFolder = '';
+    let relativePath = '';
+    for (const folder of config.folders) {
+        const folderName = path.basename(folder);
+        if (reqPath.startsWith(folderName)) {
+            baseFolder = folder;
+            relativePath = reqPath.substring(folderName.length).replace(/^\/+/, '');
+            break;
+        }
+    }
+    if (!baseFolder) {
+        return res.status(403).json({ error: 'Access denied' });
+    }
+    const fullPath = path.resolve(baseFolder, relativePath, filename);
+    // Ensure the resolved path is within the base folder
+    if (!fullPath.startsWith(path.resolve(baseFolder))) {
+        return res.status(403).json({ error: 'Access denied' });
+    }
+    try {
+        // Ensure directory exists
+        const dir = path.dirname(fullPath);
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        // Write chunk
+        const buffer = Buffer.from(data, 'base64');
+        const writeStream = fs.createWriteStream(fullPath, { flags: chunkIndex === 0 ? 'w' : 'a' });
+        writeStream.write(buffer);
+        writeStream.end();
+        writeStream.on('finish', () => {
+            if (chunkIndex === totalChunks - 1) {
+                res.json({ message: 'File uploaded successfully' });
+            }
+            else {
+                res.json({ message: 'Chunk uploaded' });
+            }
+        });
+        writeStream.on('error', (err) => {
+            res.status(500).json({ error: 'Failed to write chunk' });
+        });
+    }
+    catch (error) {
+        res.status(500).json({ error: 'Failed to upload file' });
+    }
+});
 app.listen(config.server.port, () => {
     console.log(`Server running on port ${config.server.port}`);
 });

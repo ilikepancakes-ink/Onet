@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:file_picker/file_picker.dart';
 import 'api_service.dart';
 import 'models.dart';
 import 'file_viewer_screen.dart';
@@ -51,6 +53,35 @@ class _FolderBrowserScreenState extends State<FolderBrowserScreen> {
     _loadContent();
   }
 
+  Future<void> _uploadFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+    if (result != null) {
+      final file = result.files.first;
+      final data = file.bytes!;
+      final filename = file.name;
+      const chunkSize = 1024 * 1024; // 1MB chunks
+      final totalChunks = (data.length / chunkSize).ceil();
+
+      for (int i = 0; i < totalChunks; i++) {
+        final start = i * chunkSize;
+        final end = (i + 1) * chunkSize;
+        final chunk = data.sublist(start, end > data.length ? data.length : end);
+        final success = await widget.api.uploadFile(currentPath, filename, chunk, i, totalChunks);
+        if (!success && i == totalChunks - 1) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Upload failed')),
+          );
+          return;
+        }
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('File uploaded successfully')),
+      );
+      _loadContent();
+    }
+  }
+
   void _openFile(String fileName) {
     final filePath = currentPath.isEmpty ? fileName : '$currentPath/$fileName';
     Navigator.push(
@@ -76,6 +107,13 @@ class _FolderBrowserScreenState extends State<FolderBrowserScreen> {
                 onPressed: _goBack,
               )
             : null,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.upload_file),
+            iconSize: 24 * scale,
+            onPressed: _uploadFile,
+          ),
+        ],
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())

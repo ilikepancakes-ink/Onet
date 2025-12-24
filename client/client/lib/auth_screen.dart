@@ -25,13 +25,6 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void initState() {
     super.initState();
-    final appProvider = Provider.of<AppProvider>(context, listen: false);
-    final creds = appProvider.getCredentials(widget.api.baseUrl);
-    if (creds != null) {
-      _userController.text = creds.username;
-      _passController.text = creds.password;
-      _rememberCredentials = true;
-    }
   }
 
   void _login() async {
@@ -46,7 +39,7 @@ class _AuthScreenState extends State<AuthScreen> {
     final appProvider = Provider.of<AppProvider>(context, listen: false);
     if (token != null) {
       if (_rememberCredentials) {
-        appProvider.saveCredentials(widget.api.baseUrl, Credentials(username: user, password: pass));
+        await appProvider.saveCredentials(widget.api.baseUrl, Credentials(username: user, password: pass));
       }
       Navigator.pushReplacement(
         context,
@@ -55,11 +48,35 @@ class _AuthScreenState extends State<AuthScreen> {
         ),
       );
     } else {
-      appProvider.removeCredentials(widget.api.baseUrl);
+      await appProvider.removeCredentials(widget.api.baseUrl);
       final l10n = AppLocalizations.of(context)!;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l10n.authenticationFailed)),
       );
+    }
+  }
+
+  void _loginWithSaved() async {
+    final appProvider = Provider.of<AppProvider>(context, listen: false);
+    final creds = await appProvider.getCredentials(widget.api.baseUrl);
+    if (creds != null) {
+      setState(() => _isLoading = true);
+      final token = await widget.api.authenticate(creds.username, creds.password);
+      setState(() => _isLoading = false);
+      if (token != null) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FolderBrowserScreen(api: widget.api),
+          ),
+        );
+      } else {
+        await appProvider.removeCredentials(widget.api.baseUrl);
+        final l10n = AppLocalizations.of(context)!;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.authenticationFailed)),
+        );
+      }
     }
   }
 
@@ -69,6 +86,8 @@ class _AuthScreenState extends State<AuthScreen> {
     final size = MediaQuery.of(context).size;
     final isMobile = size.width < 600;
     final scale = isMobile ? 1.5 : 1.0;
+    final appProvider = Provider.of<AppProvider>(context);
+    final hasSaved = appProvider.savedCredentialFlags[widget.api.baseUrl] ?? false;
     return Scaffold(
       appBar: AppBar(title: Text(l10n.authentication, style: TextStyle(fontSize: 20 * scale))),
       body: Padding(
@@ -86,6 +105,13 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
             ),
             SizedBox(height: 20 * scale),
+            if (hasSaved)
+              ElevatedButton(
+                onPressed: _loginWithSaved,
+                style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 48 * scale)),
+                child: Text('Login with saved credentials', style: TextStyle(fontSize: 16 * scale)),
+              ),
+            if (hasSaved) SizedBox(height: 10 * scale),
             TextField(
               controller: _userController,
               decoration: InputDecoration(labelText: l10n.username, labelStyle: TextStyle(fontSize: 16 * scale)),
